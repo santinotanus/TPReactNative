@@ -8,6 +8,7 @@ import {
   Button,
   ActivityIndicator,
   StyleSheet,
+  Alert, // Agregado para cumplir con la validación
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPosts, addPost } from '../features/posts/postsSlice';
@@ -27,6 +28,7 @@ const HomeScreen = () => {
   const handleAddPost = () => {
     if (!title.trim() || !body.trim()) {
       // Acá podrían mostrar un Toast/Alert en la consigna
+      Alert.alert('Error', 'Por favor completa todos los campos'); // Agregado
       return;
     }
 
@@ -49,13 +51,21 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <Text style={styles.header}>MiniBlog de Clases</Text>
 
-      {isLoading && <ActivityIndicator />}
+      {/* Modificado para mostrar texto de carga */}
+      {isLoading && (
+        <View style={{ alignItems: 'center', marginVertical: 10 }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text style={{ marginTop: 5 }}>Cargando publicaciones...</Text>
+        </View>
+      )}
+
       {error && <Text style={styles.error}>{error}</Text>}
 
       <FlatList
         data={items}
+        // Fix: Combina ID con index para evitar claves duplicadas (error "same key")
         keyExtractor={(item, index) =>
-          item.id ? item.id.toString() : `local-${index}`
+          (item.id ? item.id.toString() : `local-${index}`) + '-' + index
         }
         renderItem={({ item }) => (
           <View style={styles.card}>

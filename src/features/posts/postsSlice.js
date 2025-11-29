@@ -35,7 +35,7 @@ export const addPost = createAsyncThunk(
       }
     );
     if (!response.ok) {
-      throw new Error('Error al crear la publicación');
+      throw new Error('Error al crear publicación');
     }
     const data = await response.json();
     return data;
@@ -46,7 +46,6 @@ const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    // Si quisieras agregar acciones síncronas locales, van acá.
   },
   extraReducers: (builder) => {
     builder
